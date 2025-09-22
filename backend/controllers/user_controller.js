@@ -108,6 +108,93 @@ export const login =  async(req,res) =>{
         return res.status(500).json({
             success : false,
             message:"Failed to login"
+        })  
+    }
+}
+
+
+export const logout = async(_,res) =>{
+    try {
+
+        return res.status(200).cookie("token","",{maxAge:0}).json({
+            message: "Logout success",
+            success:true
         })
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
+
+export const myprofile =  async(req,res) =>{
+
+    try {
+        const {userid} = req.body;
+        
+
+        let user =await User.findOne({_id:userid})
+        if(!user) 
+        {
+            return res.status(400).json({
+                success:false,
+                message:"No user found"
+            }) 
+        }
+
+        res.status(200).json({
+            success:true,
+            message:user
+        })
+         
+         console.log(`user name ${user.firstName}`);
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message:"Failed to login"
+        })
+    }
+}
+
+
+export const updateProfile = async(req,res) =>{
+
+    try {
+
+        const {userid, firstName,lastName} = req.body;
+        let user = await User.findByIdAndUpdate(
+            userid,
+
+            {$set:{firstName,lastName}},
+            {new:true,runValidators:true}
+        
+        );
+        if (!user)
+        {
+            return res.status(400).json({
+                success:false,
+                message:"user not found!"
+            })
+        }
+
+         
+ 
+        return res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            user,
+          });
+        
+    } catch (error) {
+
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update profile",
+          });
+        
     }
 }
