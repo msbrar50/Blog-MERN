@@ -165,7 +165,7 @@ export const updateProfile = async(req,res) =>{
     try {
 
         const {userid, firstName,lastName} = req.body;
-        let user = await User.findByIdAndUpdate(
+        let user = await user.findByIdAndUpdate(
             userid,
 
             {$set:{firstName,lastName}},
