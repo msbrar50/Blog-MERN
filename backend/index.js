@@ -8,8 +8,9 @@ import userRoute from "./routes/user_routes.js"
 
 import blogRouter from "./routes/blog_routes.js";
 
+import commentRouter from "./routes/comment_routes.js"
 
-
+ 
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -36,6 +37,9 @@ app.use("/api/v1/user",userRoute)
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // serve images
 app.use("/api/v1/blog", blogRouter);
+
+
+app.use("/api/v1/comments", commentRouter);
 
 
 

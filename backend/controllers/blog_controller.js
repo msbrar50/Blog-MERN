@@ -187,3 +187,43 @@ export const updateBlog = async(req,res)=>{
 }
 
 
+export const searchBlog = async(req,res) =>{
+
+    try {
+        
+        const {searchWord} = req.query;
+
+        console.log("Search word received:", searchWord);
+
+        if(!searchWord || searchWord.trim()===""){
+            return res.status(400).json({
+                success:false,
+                message:"Please enter any word",
+            });
+        }
+
+        const blogs = await Blog.find({
+            $or: [
+                { title: { $regex: searchWord, $options: "i" } },
+                { description: { $regex: searchWord, $options: "i" } },
+              ],
+        }).select("title photoUrl description");
+
+        return res.status(200).json({
+            success:true,
+           blogs,
+        });
+
+
+    } catch (error) {
+
+        console.error(error)
+        return res.status(500).json({
+            success:false,
+            message:"something went wrong!",
+        });
+        
+    }
+}
+
+
