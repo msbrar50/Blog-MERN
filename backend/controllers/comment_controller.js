@@ -70,3 +70,81 @@ export const getAllCommentsOfBlog = async(req,res)=>{
         })
     }
 }
+
+
+export const deleteComment = async(req,res)=>{
+
+    try {
+
+ 
+        const {comment_id} = req.params;
+        const commentDel = await Comment.findByIdAndDelete(comment_id);
+
+        if(!commentDel){
+            return res.status(400).json({
+                success:false,
+                message:`comment not found`
+            });
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Comment deleted successfully"
+        });
+        
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success:false,
+            message:"failed to delete comment",
+        });
+    }
+}
+
+/****update cpmment */
+
+
+export const updateComment = async (req,res) =>{
+
+
+
+    try {
+
+        const {comment_id} = req.params;
+
+        const {comment_text} = req.body;
+
+        if (!comment_text || comment_text.trim() === "") {
+            return res.status(400).json({
+              success: false,
+              message: "Comment text cannot be empty",
+            });
+          }
+
+          const comment = await Comment.findById(comment_id);
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    comment.comment_text = comment_text;
+    await comment.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment updated successfully",
+      comment,
+    });
+        
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Somerthing went wrong!",
+          });
+    }
+}
